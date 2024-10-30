@@ -12,17 +12,18 @@ def load_data(ambi=False):
         data = ds.filter(lambda x: x['dataset'] == 'mtgen_a')
     return data
 
-def get_suggestions_and_edits(ds):
+
+def get_relevant_cols(ds):
+    original = ds['segment']
     suggestion = ds['suggestion']
     post_edits = ds['last_translation']
-    return suggestion,post_edits
+    return original,suggestion,post_edits
 
 
 if __name__ == '__main__':
     data = load_data(False)
     #print("Columns:", data.column_names)
 
-    suggestion, post_edits = get_suggestions_and_edits(data)
-
+    original,suggestion, post_edits = get_relevant_cols(data)
 
 
