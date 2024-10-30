@@ -8,3 +8,6 @@ if __name__ == '__main__':
 
     ds = load_dataset("FBK-MT/gender-bias-PE", "all")
     print(ds.shape)
+
+    unambi = ds.filter(lambda x: x['dataset'] == 'mtgen_un')
+
