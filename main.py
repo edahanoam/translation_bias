@@ -17,13 +17,18 @@ def get_relevant_cols(ds):
     original = ds['segment']
     suggestion = ds['suggestion']
     post_edits = ds['last_translation']
-    return original,suggestion,post_edits
+    references= ds['tgt']
+    return original,suggestion,post_edits,references
 
 
 if __name__ == '__main__':
     data = load_data(False)
     #print("Columns:", data.column_names)
 
-    original,suggestion, post_edits = get_relevant_cols(data)
+    original,suggestion, post_edits,references = get_relevant_cols(data)
+    # for sent in original[:10]:
+    #     print(sent)
+
+
 
 
