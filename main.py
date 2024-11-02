@@ -35,7 +35,10 @@ def get_relevant_cols(ds,Female=True):
 
 def calc_dif(bleu,suggestions_male,references_male,suggestions_female,references_female):
     male_score=bleu.compute(predictions=suggestions_male, references=references_male)
-    print(male_score)
+    print(male_score['bleu'])
+    female_score=bleu.compute(predictions=suggestions_female, references=references_female)
+    print(female_score['bleu'])
+    print(male_score['bleu']-female_score['bleu'])
 
 
 
@@ -47,7 +50,16 @@ if __name__ == '__main__':
     suggestions_male, post_edits_male, references_male = get_relevant_cols(data, False)
 
     bleu = evaluate.load("bleu")
-    calc_dif(bleu,suggestions_male,references_male,suggestions_female,references_female)
+
+    #calc_dif(bleu,suggestions_male,references_male,suggestions_female,references_female)
+
+    #sanity check: reproduce the bleu score in paper
+    suggestions = data['suggestion']
+    references = data['tgt']
+    refrences_array = [[s] for s in references]
+    all_score= bleu.compute(predictions=suggestions, references=refrences_array)
+    print(all_score['bleu'])
+
 
 
 
