@@ -72,10 +72,24 @@ def calc_all_options():
     print(results)
 
 
+
+def get_proffession_list():
+    df= pd.read_csv("gold_BUG.csv")
+    prof_list=df.profession.unique()
+    return prof_list
+
+
+def filter_profession(ds):
+    prof_list=get_proffession_list()
+    print(len(ds))
+    filtered_data = ds.filter(lambda x: any(word in x['segment'] for word in prof_list))
+    print(len(filtered_data))
+
+
 if __name__ == '__main__':
     #print("Columns:", data.column_names)
-
-    calc_all_options()
+    filter_profession(load_data(False))
+    #calc_all_options()
 
 
 
