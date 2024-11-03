@@ -122,23 +122,9 @@ def merge_sterio_anti(df_bug,ds,proffesion_list):
 
         return example
 
-    filtered_dataset = dataset_texts.filter(lambda example: example['stereotype'] is not None)
-
-    # Count the rows that don't have None in the 'stereotype'
-    count_non_none_stereotype = len(filtered_dataset)
-
-    print("Number of rows without None in the stereotype column:", count_non_none_stereotype)
-
     # Second pass to adjust None stereotypes
     dataset_texts = dataset_texts.map(adjust_stereotype)
-    # Filter the dataset to remove rows where 'stereotype' is None
-    filtered_dataset = dataset_texts.filter(lambda example: example['stereotype'] is not None)
-
-    # Count the rows that don't have None in the 'stereotype'
-    count_non_none_stereotype = len(filtered_dataset)
-
-    print("Number of rows without None in the stereotype column:", count_non_none_stereotype)
-
+    return dataset_texts
 
 
 def filter_profession(ds):
@@ -149,12 +135,30 @@ def filter_profession(ds):
     return filtered_data
 
 
+def calc_bleu_dif_stereotype(ds):
+    bleu = evaluate.load("bleu")
+    anti = ds.filter(lambda x: x['stereotype'] == -1.0)
+    pro = ds.filter(lambda x: x['stereotype'] == 1.0)
+    post_edits_anti = anti['last_translation']
+    suggestions_anti = anti['suggestion']
+    references_anti = anti['tgt']
+    refrences_array_anti = [[s] for s in references_anti]
+    post_edits_pro = pro['last_translation']
+    suggestions_pro = pro['suggestion']
+    references_pro = pro['tgt']
+    refrences_array_pro = [[s] for s in references_pro]
+    antibleu,pro_bleu,dif = calc_dif(bleu, suggestions_pro, refrences_array_pro, suggestions_anti, refrences_array_anti)
+    print(f"anti bleu {antibleu} pro bleu {pro_bleu} dif {dif}")
+    antibleu_after,pro_bleu_after,dif_after= calc_dif(bleu, post_edits_pro, refrences_array_pro, post_edits_anti, refrences_array_anti)
+    print(f"anti bleu {antibleu_after} pro bleu {pro_bleu_after} dif {dif_after}")
+
 
 if __name__ == '__main__':
     #print("Columns:", data.column_names)
-    filter_profession(load_data(False))
+    #filter_profession(load_data(False))
     #calc_all_options()
-    merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
+    ds = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
+    calc_bleu_dif_stereotype(ds)
 
 
     #sanity check: reproduce the bleu score in paper
