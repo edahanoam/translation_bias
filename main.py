@@ -45,6 +45,7 @@ def calc_dif(bleu,suggestions_male,references_male,suggestions_female,references
     return male_score['bleu'],female_score['bleu'],male_score['bleu']-female_score['bleu']
 
 def calc_all_options():
+    """calc the difference between male and female sentences"""
     #abmigous
     bleu = evaluate.load("bleu")
     data = load_data(True)
@@ -136,6 +137,7 @@ def filter_profession(ds):
 
 
 def calc_bleu_dif_stereotype(ds):
+    """calculate the differences between stereotypical and anti stereotypical sentences"""
     bleu = evaluate.load("bleu")
     anti = ds.filter(lambda x: x['stereotype'] == -1.0)
     pro = ds.filter(lambda x: x['stereotype'] == 1.0)
