@@ -83,10 +83,12 @@ def get_proffession_list():
 
 
 def merge_sterio_anti(df_bug,ds,proffesion_list):
+    """This function merge the bug info about proffessions and steriotypes info the FBK"""
     # first change columns value to much the FBK
     df_bug["predicted gender"] = df_bug["predicted gender"].replace({"Male": "M", "Female": "F"})
 
     def categorize_text(example):
+        """this function looks for proffessions in the text and """
         # Extract the profession mentioned in the text
         profession_found = None
         for profession in proffesion_list:
@@ -111,7 +113,9 @@ def merge_sterio_anti(df_bug,ds,proffesion_list):
     dataset_texts = ds.map(categorize_text)
 
     # Function to adjust stereotypes based on opposite gender
-    def adjust_stereotype(example):
+    def find_opposite_gender(example):
+        """this function goes over unmatched professions and see
+        if they are included in the bug dataset for the opposite gender"""
         if example['stereotype'] is None and example['profession'] is not None:
             # Find the opposite gender
             opposite_gender = 'F' if example['gender'] == 'M' else 'M'
@@ -124,7 +128,7 @@ def merge_sterio_anti(df_bug,ds,proffesion_list):
         return example
 
     # Second pass to adjust None stereotypes
-    dataset_texts = dataset_texts.map(adjust_stereotype)
+    dataset_texts = dataset_texts.map(find_opposite_gender)
     return dataset_texts
 
 
