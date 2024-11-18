@@ -1,1 +1,3 @@
 docopt
+spacy
+#fast-alignment

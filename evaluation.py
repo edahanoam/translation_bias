@@ -6,8 +6,11 @@
 
 from docopt import docopt
 from pathlib import Path
+import spacy
 
 
+def find_entities():
+    pass
 
 if __name__ == '__main__':
     # Parse command line arguments
