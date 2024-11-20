@@ -1,4 +1,6 @@
 docopt
 spaCy
 numpy==1.26.4
+datasets
+huggingface_hub
 #fast-alignment
