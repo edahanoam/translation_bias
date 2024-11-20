@@ -47,6 +47,21 @@ def find_all_entities(dataset,english_col,model=None):
     return dataset
 
 
+def transform_to_fast_align(dataset, original_text_column, translation_column, out_fn):
+
+    def format_row(row):
+        return {"formatted_text": f"{row[original_text_column]} ||| {row[translation_column]}"}
+
+    formatted_lines = dataset.map(format_row, remove_columns=dataset.column_names)
+
+    # Write to file in one go
+    with open(out_fn, "w", encoding="utf-8") as f:
+        f.write("\n".join(formatted_lines["formatted_text"]))
+
+
+
+
+
 
 if __name__ == '__main__':
     # Parse command line arguments
@@ -57,6 +72,7 @@ if __name__ == '__main__':
     data = load_data(False)
     data=find_all_entities(data,english_col="segment")
     print(data['entity'])
+    transform_to_fast_align(data, 'segment', 'tgt', 'fast_align.txt')
 
 
 
