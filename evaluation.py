@@ -57,6 +57,6 @@ if __name__ == '__main__':
     data = load_data(False)
     data=find_all_entities(data,english_col="segment")
     print(data['entity'])
-    #
+
 
 
