@@ -14,15 +14,15 @@ from typing import List
 import csv
 
 # Local imports
-from languages.spacy_support import SpacyPredictor
+from WinoMTSupport.spacy_support import SpacyPredictor
 # from languages.german import GermanPredictor
-from languages.gendered_article import GenderedArticlePredictor, \
+from WinoMTSupport.gendered_article import GenderedArticlePredictor, \
     get_german_determiners, GERMAN_EXCEPTION, get_french_determiners
-from languages.pymorph_support import PymorphPredictor
-from languages.semitic_languages import HebrewPredictor, ArabicPredictor
-from languages.morfeusz_support import MorfeuszPredictor
-from evaluate import evaluate_bias
-from languages.czech import CzechPredictor
+from WinoMTSupport.pymorph_support import PymorphPredictor
+#from languages.semitic_languages import HebrewPredictor, ArabicPredictor
+#from languages.morfeusz_support import MorfeuszPredictor
+#from evaluate import evaluate_bias
+#from languages.czech import CzechPredictor
 #=-----
 
 LANGAUGE_PREDICTOR = {
@@ -31,11 +31,11 @@ LANGAUGE_PREDICTOR = {
     "it": lambda: SpacyPredictor("it"),
     "ru": lambda: PymorphPredictor("ru"),
     "uk": lambda: PymorphPredictor("uk"),
-    "he": lambda: HebrewPredictor(),
-    "ar": lambda: ArabicPredictor(),
+    #"he": lambda: HebrewPredictor(),
+    #"ar": lambda: ArabicPredictor(),
     "de": lambda: GenderedArticlePredictor("de", get_german_determiners, GERMAN_EXCEPTION),
-    "cs": lambda: CzechPredictor(),
-    "pl": lambda: MorfeuszPredictor(),
+    #"cs": lambda: CzechPredictor(),
+    #"pl": lambda: MorfeuszPredictor(),
 }
 
 def get_src_indices(instance: List[str]) -> List[int]:

@@ -5,4 +5,5 @@ datasets
 huggingface_hub
 transformers
 pandas
+pymorphy2
 #fast-alignment

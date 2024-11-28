@@ -14,7 +14,7 @@ from collections import Counter
 import spacy
 
 # Local imports
-from languages.util import GENDER, get_gender_from_token
+from WinoMTSupport.util import GENDER, get_gender_from_token
 #=-----
 
 DE_DETERMINERS = {"der": GENDER.male, "ein": GENDER.male, "dem": GENDER.male, #"den": GENDER.male, 
