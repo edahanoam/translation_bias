@@ -112,6 +112,7 @@ def merge_sterio_anti(df_bug,ds,proffesion_list):
         example["profession"] = profession_found
         example["stereotype"] = stereotype
         example["profession_index"] = profession_index
+        example["profession_index"] =example["profession_index"]
         return example
 
     # Apply the categorize_text function to the dataset

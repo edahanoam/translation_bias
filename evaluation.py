@@ -1,5 +1,5 @@
 """ Usage:
-    <file-name> --in=INPUT_FILE --out=OUTPUT_FILE [--debug]
+    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE [--debug]
 
 """
 
@@ -121,14 +121,14 @@ def create_ds_fn(data, original_text_column):
 
 if __name__ == '__main__':
     # Parse command line arguments
-    #args = docopt(__doc__)
+    args = docopt(__doc__)
     # in_file = args["--in"]
     # out_fn = Path(args["--out"])
 
-    #bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
+    bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
     #ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
 
-    #align_fn = args["--align"] # i am the fast a allign file
+    align_fn = args["--align"] # i am the fast a allign file
     #find_entities()
     #data = load_data(True)
     #data=find_all_entities(data,english_col="segment")
@@ -136,16 +136,16 @@ if __name__ == '__main__':
 
     data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(True)),get_proffession_list())
     print(type(data))
+
     ds = create_ds_fn(data,'segment')
     print(ds)
     #transform_to_fast_align(data, 'segment', 'tgt', 'fast_align.txt')
 
     #ds_fn = create_ds_fn(data)
     #ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
-    #full_bitext = [line.strip().split(" ||| ")
-     #         for line in open(bi_fn, encoding = "utf8")]
-    #bitext = align_bitext_to_ds(full_bitext, ds)
+    full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
+    bitext = align_bitext_to_ds(full_bitext, ds)
 
-    #translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
-    #assert(len(translated_profs) == len(tgt_inds))
+    translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
+    assert(len(translated_profs) == len(tgt_inds))
 
