@@ -11,10 +11,30 @@ from datasets import load_dataset
 from huggingface_hub import login
 from main import get_proffession_list,filter_profession,merge_sterio_anti
 import pandas as pd
+from WinoMTSupport.spacy_support import SpacyPredictor
+from WinoMTSupport.gendered_article import GenderedArticlePredictor, \
+    get_german_determiners, GERMAN_EXCEPTION, get_french_determiners
+from WinoMTSupport.load_alignments import align_bitext_to_ds, get_translated_professions
+
+
+
 login()
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
+
+LANGAUGE_PREDICTOR = {
+    "es": lambda: SpacyPredictor("es"),
+    #"fr": lambda: SpacyPredictor("fr"),
+    "it": lambda: SpacyPredictor("it"),
+    #"ru": lambda: PymorphPredictor("ru"),
+    #"uk": lambda: PymorphPredictor("uk"),
+    #"he": lambda: HebrewPredictor(),
+    #"ar": lambda: ArabicPredictor(),
+    "de": lambda: GenderedArticlePredictor("de", get_german_determiners, GERMAN_EXCEPTION),
+    #"cs": lambda: CzechPredictor(),
+    #"pl": lambda: MorfeuszPredictor(),
+}
 
 
 def load_data(ambi=False):
@@ -63,7 +83,7 @@ def find_all_professions(dataset,english_col,model=None):
 
 
 def transform_to_fast_align(dataset, original_text_column, translation_column, out_fn):
-
+#todo: move to a different file, it is not a part of the pipeline
     def format_row(row):
         return {"formatted_text": f"{row[original_text_column]} ||| {row[translation_column]}"}
 
@@ -77,12 +97,28 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
 
 
 
+def identify_gender_ttranslations(df, lang):
+    gender_predictor = LANGAUGE_PREDICTOR[lang]()
+    if lang=='German':
+        pass
+
+    if lang=='Italian':
+        pass
+
+    if lang=='Spanish':
+        pass
+
 
 if __name__ == '__main__':
     # Parse command line arguments
     args = docopt(__doc__)
-    in_file = args["--in"]
-    out_fn = Path(args["--out"])
+    # in_file = args["--in"]
+    # out_fn = Path(args["--out"])
+
+    bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
+    ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
+
+    align_fn = args["--align"] # i am the fast a allign file
     #find_entities()
     #data = load_data(True)
     #data=find_all_entities(data,english_col="segment")
@@ -93,4 +129,11 @@ if __name__ == '__main__':
     transform_to_fast_align(data, 'segment', 'tgt', 'fast_align.txt')
 
 
+    ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
+    full_bitext = [line.strip().split(" ||| ")
+              for line in open(bi_fn, encoding = "utf8")]
+    bitext = align_bitext_to_ds(full_bitext, ds)
+
+    translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
+    assert(len(translated_profs) == len(tgt_inds))
 
