@@ -109,8 +109,14 @@ def identify_gender_ttranslations(df, lang):
         pass
 
 
-def create_ds_fn(data, original_text_column, translation_column):
-    pass
+def create_ds_fn(data, original_text_column):
+    df = data.to_pandas()
+    selected_columns = ['gender', 'profession_index','segment', 'profession']
+    reordered_df = df[selected_columns]
+
+    # Convert the reordered DataFrame to a list of lists
+    ds = reordered_df.values.tolist()
+    return ds
 
 
 if __name__ == '__main__':
@@ -129,7 +135,9 @@ if __name__ == '__main__':
     #print(data['entity'])
 
     data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(True)),get_proffession_list())
-    print(data.features)
+    print(type(data))
+    ds = create_ds_fn(data,'segment')
+    print(ds)
     #transform_to_fast_align(data, 'segment', 'tgt', 'fast_align.txt')
 
     #ds_fn = create_ds_fn(data)

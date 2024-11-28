@@ -97,7 +97,7 @@ def merge_sterio_anti(df_bug,ds,proffesion_list):
             match =re.search(rf"\b{profession}\b", example["segment"], re.IGNORECASE)
             if match:
                 profession_found = profession
-                profession_index = match.start()
+                profession_index = int(len(example["segment"][:match.start()].split()))
                 break
 
         # Find the stereotype based on profession and gender
