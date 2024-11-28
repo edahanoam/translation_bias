@@ -91,9 +91,13 @@ def merge_sterio_anti(df_bug,ds,proffesion_list):
         """this function looks for proffessions in the text and """
         # Extract the profession mentioned in the text
         profession_found = None
+        profession_index = None
+
         for profession in proffesion_list:
-            if re.search(rf"\b{profession}\b", example["segment"], re.IGNORECASE):
+            match =re.search(rf"\b{profession}\b", example["segment"], re.IGNORECASE)
+            if match:
                 profession_found = profession
+                profession_index = match.start()
                 break
 
         # Find the stereotype based on profession and gender
@@ -107,6 +111,7 @@ def merge_sterio_anti(df_bug,ds,proffesion_list):
         # Add extracted information to the example
         example["profession"] = profession_found
         example["stereotype"] = stereotype
+        example["profession_index"] = profession_index
         return example
 
     # Apply the categorize_text function to the dataset
