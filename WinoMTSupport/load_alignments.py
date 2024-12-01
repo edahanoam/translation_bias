@@ -133,11 +133,6 @@ def align_bitext_to_ds(bitext, ds):
     """
     bitext_dict = dict([(src.strip(), (ind, tgt.strip())) for ind, (src, tgt) in enumerate(bitext)])
 
-    print("YO")
-    print("YP")
-    print("YO")
-    print("YO")
-    print(bitext_dict.keys())
     new_bitext = []
     for entry in ds:
         en_sent = entry[2].strip()

@@ -2,7 +2,7 @@
     <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE [--debug]
 
 """
-
+from tabnanny import process_tokens
 
 from docopt import docopt
 from pathlib import Path
@@ -15,10 +15,11 @@ from WinoMTSupport.spacy_support import SpacyPredictor
 from WinoMTSupport.gendered_article import GenderedArticlePredictor, \
     get_german_determiners, GERMAN_EXCEPTION, get_french_determiners
 from WinoMTSupport.load_alignments import align_bitext_to_ds, get_translated_professions
+from tqdm import tqdm
 
 
 
-login()
+#login()
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
@@ -96,27 +97,39 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
 
 
 
-
-def identify_gender_ttranslations(df, lang):
-    gender_predictor = LANGAUGE_PREDICTOR[lang]()
-    if lang=='German':
-        pass
-
-    if lang=='Italian':
-        pass
-
-    if lang=='Spanish':
-        pass
-
-
 def create_ds_fn(data, original_text_column):
-    df = data.to_pandas()
+    #df = data.to_pandas()
     selected_columns = ['gender', 'profession_index','segment', 'profession']
-    reordered_df = df[selected_columns]
+    reordered_df = data[selected_columns]
 
     # Convert the reordered DataFrame to a list of lists
     ds = reordered_df.values.tolist()
     return ds
+
+
+def predict_gender(word, lang='it'):
+    #todo: some of the words like dottoressa and cuoca (female noun) get tagged as verb thus wre cant get their gender!
+    nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
+    doc = nlp(word)
+    gender_set = set()  # Use a set to store unique genders
+
+    for token in doc:
+        print(f"Token: {token.text}, POS: {token.pos_}, Tags: {token.tag_}, Morph: {token.morph}")
+
+        # Extract gender, ensure it's not a list
+        gender_info = token.morph.get("Gender")
+        if isinstance(gender_info, list):
+            # If gender_info is a list, extend the set with all items
+            gender_set.update(gender_info)
+        elif gender_info:
+            # If it's a single item, add it to the set
+            gender_set.add(gender_info)
+
+    if not gender_set:
+        return "Gender not found or not applicable"
+    return ", ".join(gender_set)  # Return unique genders
+
+
 
 
 if __name__ == '__main__':
@@ -134,12 +147,13 @@ if __name__ == '__main__':
     #data=find_all_entities(data,english_col="segment")
     #print(data['entity'])
 
-    data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
-    filtered_dataset = data.filter(lambda row: None not in row.values())
+    # data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
+    # filtered_dataset = data.filter(lambda row: None not in row.values())
+    data = pd.read_csv('unambi_data.csv')
 
     print(type(data))
 
-    ds = create_ds_fn(filtered_dataset,'segment')
+    ds = create_ds_fn(data,'segment')
     print(ds)
 
     #ds_fn = create_ds_fn(data)
@@ -151,4 +165,32 @@ if __name__ == '__main__':
     assert(len(translated_profs) == len(tgt_inds))
     print(translated_profs)
     print(tgt_inds)
+
+
+    target_sentences = [tgt_sent for (ind, (src_sent, tgt_sent)) in bitext]
+
+
+
+    words = ['dottoressa','medico','avvocata','pittore','fotografo','cuoca','cuoco']
+    for word in words:
+        print(f"the gender of {word} is {predict_gender(word)}")
+
+
+
+    # gender_predictor = LANGAUGE_PREDICTOR['it']()
+    #
+    #
+    # gender_predictions = [gender_predictor.get_gender(prof, translated_sent, entity_index, ds_entry)
+    #                       for prof, translated_sent, entity_index, ds_entry
+    #                       in tqdm(zip(translated_profs,
+    #                                   target_sentences,
+    #                                   map(lambda ls:min(ls, default = -1), tgt_inds),
+    #                                   ds))]
+    #
+    #
+    # print(gender_predictions)
+
+    # Output predictions
+    #output_predictions(target_sentences, gender_predictions, out_fn)
+
 

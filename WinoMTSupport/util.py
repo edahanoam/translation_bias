@@ -66,41 +66,74 @@ MORFEUSZ_GENDER_TYPES = {
 MORFEUSZ_GENDER_TAG_POSITION = 2
 
 
+# def get_morphology_dict(token: Token) -> Dict:
+#     """
+#     Parse a morphology dictionary from spacy token.
+#     @TODO: No better way to do this?
+#     """
+#     if "__" not in token.tag_:
+#         raise AssertionError("No morphology support?")
+#
+#     morphology = token.tag_.split("__")[1]
+#
+#     if morphology == "_":
+#         return {}
+#
+#     morphology_dict = dict([prop.split("=") for prop in morphology.split("|")])
+#     return morphology_dict
+#
+# def get_gender_from_token(token: Token):
+#     """
+#     Get gender indication from spacy token, if it exists
+#     """
+#     # Weird spacy bug? "au" should be male
+#     if (token.lang_ == "fr") and (token.text == "au") and (token.tag_.startswith("DET")):
+#         return GENDER.male
+#
+#     # Italian spacy doesn't seem to split correctly
+#     if (token.lang_ == "it") and (token.text.startswith("dell'")):
+#         return GENDER.male
+#
+#
+#     morph_dict = get_morphology_dict(token)
+#     if "Gender" not in morph_dict:
+#         return None
+#
+#     morph_gender = SPACY_GENDER_TYPES[morph_dict["Gender"]]
+#     return morph_gender
+
+
 def get_morphology_dict(token: Token) -> Dict:
     """
-    Parse a morphology dictionary from spacy token.
-    @TODO: No better way to do this?
+    Parse a morphology dictionary from a spaCy token using the `token.morph` attribute.
     """
-    if "__" not in token.tag_:
-        raise AssertionError("No morphology support?")
-
-    morphology = token.tag_.split("__")[1]
-
-    if morphology == "_":
-        return {}
-
-    morphology_dict = dict([prop.split("=") for prop in morphology.split("|")])
-    return morphology_dict
+    morph_dict = {}
+    for attr in token.morph:
+        morph_dict[attr[0]] = attr[1]
+    return morph_dict
 
 def get_gender_from_token(token: Token):
     """
-    Get gender indication from spacy token, if it exists
+    Get gender indication from a spaCy token, if it exists.
     """
-    # Weird spacy bug? "au" should be male
-    if (token.lang_ == "fr") and (token.text == "au") and (token.tag_.startswith("DET")):
-        return GENDER.male
+    print(token)
+    # Special case handling for French
+    if (token.lang_ == "fr") and (token.text == "au") and any(t.tag_.startswith("DET") for t in token.morph):
+        return 'Male'  # Using string instead of GENDER enum for simplicity
 
-    # Italian spacy doesn't seem to split correctly
+    # Special case handling for Italian
     if (token.lang_ == "it") and (token.text.startswith("dell'")):
-        return GENDER.male
-
+        return 'Male'  # Adjust as per your GENDER enum or constants
 
     morph_dict = get_morphology_dict(token)
-    if "Gender" not in morph_dict:
+    gender = morph_dict.get('Gender')
+    if not gender:
         return None
 
-    morph_gender = SPACY_GENDER_TYPES[morph_dict["Gender"]]
-    return morph_gender
+    # Map spaCy's gender to your application-specific gender enum or constant
+    return SPACY_GENDER_TYPES.get(gender, None)
+
+
 
 if __name__ == "__main__":
     # Parse command line arguments
