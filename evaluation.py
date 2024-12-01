@@ -135,11 +135,12 @@ if __name__ == '__main__':
     #print(data['entity'])
 
     data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(True)),get_proffession_list())
+    filtered_dataset = data.filter(lambda row: None not in row.values())
+
     print(type(data))
 
-    ds = create_ds_fn(data,'segment')
+    ds = create_ds_fn(filtered_dataset,'segment')
     print(ds)
-    #transform_to_fast_align(data, 'segment', 'tgt', 'fast_align.txt')
 
     #ds_fn = create_ds_fn(data)
     #ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
