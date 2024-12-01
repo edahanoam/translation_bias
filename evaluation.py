@@ -162,9 +162,12 @@ if __name__ == '__main__':
     bitext = align_bitext_to_ds(full_bitext, ds)
 
     translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
-    assert(len(translated_profs) == len(tgt_inds))
     print(translated_profs)
     print(tgt_inds)
+
+    assert(len(translated_profs) == len(tgt_inds))
+    # print(translated_profs)
+    # print(tgt_inds)
 
 
     target_sentences = [tgt_sent for (ind, (src_sent, tgt_sent)) in bitext]
