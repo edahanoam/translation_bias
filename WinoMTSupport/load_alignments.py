@@ -55,7 +55,7 @@ def get_src_indices(instance: List[str]) -> List[int]:
 
     return src_indices
 
-def get_translated_professions(alignment_fn: str, ds: List[List[str]], bitext: List[List[str]]) -> List[str]:
+def get_translated_professions(align_fn: str, ds: List[List[str]], bitext: List[List[str]]) -> List[str]:
     """
     (Language independent)
     Load alignments from file and return the translated profession according to
@@ -131,10 +131,17 @@ def align_bitext_to_ds(bitext, ds):
     """
     Return a subset of bitext that's aligned to ds.
     """
-    bitext_dict = dict([(src, (ind, tgt)) for ind, (src, tgt) in enumerate(bitext)])
+    bitext_dict = dict([(src.strip(), (ind, tgt.strip())) for ind, (src, tgt) in enumerate(bitext)])
+
+    print("YO")
+    print("YP")
+    print("YO")
+    print("YO")
+    print(bitext_dict.keys())
     new_bitext = []
     for entry in ds:
-        en_sent = entry[2]
+        en_sent = entry[2].strip()
+        print(en_sent)
         ind, tgt_sent = bitext_dict[en_sent]
         new_bitext.append((ind, (en_sent, tgt_sent)))
     return new_bitext

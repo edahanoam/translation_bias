@@ -134,7 +134,7 @@ if __name__ == '__main__':
     #data=find_all_entities(data,english_col="segment")
     #print(data['entity'])
 
-    data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(True)),get_proffession_list())
+    data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
     filtered_dataset = data.filter(lambda row: None not in row.values())
 
     print(type(data))
@@ -149,4 +149,6 @@ if __name__ == '__main__':
 
     translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
     assert(len(translated_profs) == len(tgt_inds))
+    print(translated_profs)
+    print(tgt_inds)
 
