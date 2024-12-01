@@ -1,9 +1,10 @@
 docopt
-spaCy
+spacy
 numpy==1.26.4
 datasets
 huggingface_hub
 transformers
 pandas
 pymorphy2
+tqdm
 #fast-alignment
