@@ -97,13 +97,22 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
 
 
 
-def create_ds_fn(data, original_text_column):
+def create_ds_fn(data, out_ds):
     #df = data.to_pandas()
     selected_columns = ['gender', 'profession_index','segment', 'profession']
     reordered_df = data[selected_columns]
 
     # Convert the reordered DataFrame to a list of lists
     ds = reordered_df.values.tolist()
+
+    def save_ds_as_txt(ds, filename):
+        with open(filename, 'w', encoding='utf-8') as f:
+            for row in ds:
+                f.write('\t'.join(map(str, row)) + '\n')
+
+    # Save ds
+    save_ds_as_txt(ds, out_ds)
+
     return ds
 
 
@@ -136,8 +145,9 @@ def for_the_italians(bi_fn,align_fn):
 
     #print(type(data))
 
-    ds = create_ds_fn(data,'segment')
+    ds = create_ds_fn(data,'ds.txt')
     print(ds)
+
 
     #ds_fn = create_ds_fn(data)
     #ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]

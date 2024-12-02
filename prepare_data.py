@@ -39,6 +39,16 @@ def using_italiandata():
     df.to_csv('unambi_data.csv', index=False)
 
     transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_nonums.txt')
+    create_ds_fn(df)
+
+def create_ds_fn(data):
+    #df = data.to_pandas()
+    selected_columns = ['gender', 'profession_index','segment', 'profession']
+    reordered_df = data[selected_columns]
+
+    # Convert the reordered DataFrame to a list of lists
+    ds = reordered_df.values.tolist()
+    return ds
 
 
 if __name__ == '__main__':
