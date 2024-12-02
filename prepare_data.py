@@ -1,6 +1,7 @@
 from datasets import load_dataset
 from main import get_proffession_list,filter_profession,merge_sterio_anti
 import pandas as pd
+import re
 
 def load_data(ambi=False):
     ds = load_dataset("FBK-MT/gender-bias-PE", "all",split='test')
@@ -14,6 +15,9 @@ def load_data(ambi=False):
 
 def transform_to_fast_align(dataset, original_text_column, translation_column, out_fn):
     def format_row(row):
+        #row[translation_column] = row[original_text_column].str.replace(r'\s*\d+(\.\d+)?$', '', regex=True)
+        #row[translation_column] = re.sub(r'\s*\d+(\.\d+)?$', '', row[translation_column])
+
         return {"formatted_text": f"{row[original_text_column]} ||| {row[translation_column]}"}
 
     formatted_lines = dataset.map(format_row, remove_columns=dataset.column_names)
@@ -23,8 +27,9 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
         f.write("\n".join(formatted_lines["formatted_text"]))
 
 
-if __name__ == '__main__':
+def using_italiandata():
     #curently - un-ambig
+
     data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
 
     filtered_dataset = data.filter(lambda row: None not in row.values())
@@ -33,6 +38,14 @@ if __name__ == '__main__':
     # Save the DataFrame to a CSV file
     df.to_csv('unambi_data.csv', index=False)
 
-    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_unamb_fullprofs.txt')
+    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_nonums.txt')
+
+
+if __name__ == '__main__':
+    using_italiandata()
+    # gold_BUG= pd.read_csv("gold_BUG.csv")
+    # transform_to_fast_align(gold_BUG,'sentence_text')
+
+
 
 

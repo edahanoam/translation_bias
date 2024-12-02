@@ -131,27 +131,10 @@ def predict_gender(word, lang='it'):
 
 
 
-
-if __name__ == '__main__':
-    # Parse command line arguments
-    args = docopt(__doc__)
-    # in_file = args["--in"]
-    # out_fn = Path(args["--out"])
-
-    bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
-    #ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
-
-    align_fn = args["--align"] # i am the fast a allign file
-    #find_entities()
-    #data = load_data(True)
-    #data=find_all_entities(data,english_col="segment")
-    #print(data['entity'])
-
-    # data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
-    # filtered_dataset = data.filter(lambda row: None not in row.values())
+def for_the_italians(bi_fn,align_fn):
     data = pd.read_csv('unambi_data.csv')
 
-    print(type(data))
+    #print(type(data))
 
     ds = create_ds_fn(data,'segment')
     print(ds)
@@ -161,9 +144,14 @@ if __name__ == '__main__':
     full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
     bitext = align_bitext_to_ds(full_bitext, ds)
 
-    translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
-    print(translated_profs)
-    print(tgt_inds)
+    #translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
+    translated_profs, tgt_inds, alignment_pairs = get_translated_professions(align_fn, ds, bitext)
+
+    # Output the alignment pairs
+    for pair in alignment_pairs:
+        print(pair)
+    #print(translated_profs)
+    #print(tgt_inds)
 
     assert(len(translated_profs) == len(tgt_inds))
     # print(translated_profs)
@@ -174,10 +162,10 @@ if __name__ == '__main__':
 
 
 
-    words = ['dottoressa','medico','avvocata','pittore','fotografo','cuoca','cuoco']
-    for word in words:
-        print(f"the gender of {word} is {predict_gender(word)}")
-
+    # words = ['dottoressa','medico','avvocata','pittore','fotografo','cuoca','cuoco']
+    # for word in words:
+    #     print(f"the gender of {word} is {predict_gender(word)}")
+    #
 
 
     # gender_predictor = LANGAUGE_PREDICTOR['it']()
@@ -197,3 +185,24 @@ if __name__ == '__main__':
     #output_predictions(target_sentences, gender_predictions, out_fn)
 
 
+
+
+if __name__ == '__main__':
+    # Parse command line arguments
+    args = docopt(__doc__)
+    # in_file = args["--in"]
+    # out_fn = Path(args["--out"])
+
+    bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
+    #ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
+
+    align_fn = args["--align"] # i am the fast a allign file
+    #find_entities()
+    #data = load_data(True)
+    #data=find_all_entities(data,english_col="segment")
+    #print(data['entity'])
+
+    # data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
+    # filtered_dataset = data.filter(lambda row: None not in row.values())
+
+    for_the_italians(bi_fn,align_fn)

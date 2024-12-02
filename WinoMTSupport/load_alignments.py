@@ -12,6 +12,7 @@ from operator import itemgetter
 from tqdm import tqdm
 from typing import List
 import csv
+from typing import List, Tuple
 
 # Local imports
 from WinoMTSupport.spacy_support import SpacyPredictor
@@ -55,11 +56,72 @@ def get_src_indices(instance: List[str]) -> List[int]:
 
     return src_indices
 
-def get_translated_professions(align_fn: str, ds: List[List[str]], bitext: List[List[str]]) -> List[str]:
+# def get_translated_professions(align_fn: str, ds: List[List[str]], bitext: List[List[str]]) -> List[str]:
+#     """
+#     (Language independent)
+#     Load alignments from file and return the translated profession according to
+#     source indices.
+#     """
+#     # Load files and data structures
+#     ds_src_sents = list(map(itemgetter(2), ds))
+#     bitext_src_sents = [src_sent for ind, (src_sent, tgt_sent) in bitext]
+#
+#     # Sanity checks
+#     assert len(ds) == len(bitext)
+#     mismatched = [ind for (ind, (ds_src_sent, bitext_src_sent)) in enumerate(zip(ds_src_sents, bitext_src_sents))
+#                   if ds_src_sent != bitext_src_sent]
+#     if len(mismatched) != 0:
+#         raise AssertionError
+#
+#     bitext = [(ind, (src_sent.split(), tgt_sent.split()))
+#               for ind, (src_sent, tgt_sent) in bitext]
+#
+#     src_indices = list(map(get_src_indices, ds))
+#
+#     full_alignments = []
+#     for line in open(align_fn):
+#         cur_align = defaultdict(list)
+#         for word in line.split():
+#             src, tgt = word.split("-")
+#             cur_align[int(src)].append(int(tgt))
+#         full_alignments.append(cur_align)
+#
+#
+#     bitext_inds = [ind for ind, _ in bitext]
+#
+#     alignments = []
+#     for ind in bitext_inds:
+#         alignments.append(full_alignments[ind])
+#
+#
+#     assert len(bitext) == len(alignments)
+#     assert len(src_indices) == len(alignments)
+#
+#     translated_professions = []
+#     target_indices = []
+#
+#     for (_, (src_sent, tgt_sent)), alignment, cur_indices in tqdm(zip(bitext, alignments, src_indices)):
+#         # cur_translated_profession = " ".join([tgt_sent[cur_tgt_ind]
+#         #                                       for src_ind in cur_indices
+#         #                                       for cur_tgt_ind in alignment[src_ind]])
+#         cur_tgt_inds = ([cur_tgt_ind
+#                          for src_ind in cur_indices
+#                          for cur_tgt_ind in alignment[src_ind]])
+#
+#         cur_translated_profession = " ".join([tgt_sent[cur_tgt_ind]
+#                                               for cur_tgt_ind in cur_tgt_inds])
+#         target_indices.append(cur_tgt_inds)
+#         translated_professions.append(cur_translated_profession)
+#
+#     return translated_professions, target_indices
+
+
+
+def get_translated_professions(align_fn: str, ds: List[List[str]], bitext: List[List[str]]) -> Tuple[List[str], List[List[int]], List[Tuple[str, str]]]:
     """
     (Language independent)
     Load alignments from file and return the translated profession according to
-    source indices.
+    source indices, along with alignment pairs (source profession and target translation).
     """
     # Load files and data structures
     ds_src_sents = list(map(itemgetter(2), ds))
@@ -85,24 +147,20 @@ def get_translated_professions(align_fn: str, ds: List[List[str]], bitext: List[
             cur_align[int(src)].append(int(tgt))
         full_alignments.append(cur_align)
 
-
     bitext_inds = [ind for ind, _ in bitext]
 
     alignments = []
     for ind in bitext_inds:
         alignments.append(full_alignments[ind])
 
-
     assert len(bitext) == len(alignments)
     assert len(src_indices) == len(alignments)
 
     translated_professions = []
     target_indices = []
+    alignment_pairs = []
 
     for (_, (src_sent, tgt_sent)), alignment, cur_indices in tqdm(zip(bitext, alignments, src_indices)):
-        # cur_translated_profession = " ".join([tgt_sent[cur_tgt_ind]
-        #                                       for src_ind in cur_indices
-        #                                       for cur_tgt_ind in alignment[src_ind]])
         cur_tgt_inds = ([cur_tgt_ind
                          for src_ind in cur_indices
                          for cur_tgt_ind in alignment[src_ind]])
@@ -112,7 +170,12 @@ def get_translated_professions(align_fn: str, ds: List[List[str]], bitext: List[
         target_indices.append(cur_tgt_inds)
         translated_professions.append(cur_translated_profession)
 
-    return translated_professions, target_indices
+        # Collect alignment pairs
+        for src_ind in cur_indices:
+            for tgt_ind in alignment[src_ind]:
+                alignment_pairs.append((src_sent[src_ind], tgt_sent[tgt_ind]))
+
+    return translated_professions, target_indices, alignment_pairs
 
 
 def output_predictions(target_sentences, gender_predictions, out_fn):
