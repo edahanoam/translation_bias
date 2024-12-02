@@ -13,7 +13,6 @@ def load_data(ambi=False):
 
 
 def transform_to_fast_align(dataset, original_text_column, translation_column, out_fn):
-#todo: move to a different file, it is not a part of the pipeline
     def format_row(row):
         return {"formatted_text": f"{row[original_text_column]} ||| {row[translation_column]}"}
 
@@ -33,6 +32,6 @@ if __name__ == '__main__':
     # Save the DataFrame to a CSV file
     df.to_csv('unambi_data.csv', index=False)
 
-    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_unamb.txt')
+    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_unamb_fullprofs.txt')
 
 
