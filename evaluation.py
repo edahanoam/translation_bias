@@ -219,8 +219,6 @@ if __name__ == '__main__':
     ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
     lang = args["--lang"] # code for language
 
-    print(ds)
-
     #for_the_italians(bi_fn,align_fn,ds_fn)
     full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
     bitext = align_bitext_to_ds(full_bitext, ds)
