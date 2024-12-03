@@ -36,9 +36,9 @@ def using_italiandata():
     df = filtered_dataset.to_pandas()
 
     # Save the DataFrame to a CSV file
-    df.to_csv('unambi_data.csv', index=False)
+    df.to_csv('unambi_dataDec3.csv', index=False)
 
-    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_nonums.txt')
+    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_nonumsDec3.txt')
     create_ds_fn(df)
 
 def create_ds_fn(data):
@@ -48,6 +48,14 @@ def create_ds_fn(data):
 
     # Convert the reordered DataFrame to a list of lists
     ds = reordered_df.values.tolist()
+
+    def save_ds_as_txt(ds, filename):
+        with open(filename, 'w', encoding='utf-8') as f:
+            for row in ds:
+                f.write('\t'.join(map(str, row)) + '\n')
+
+    # Save ds
+    save_ds_as_txt(ds, 'dsDEc3.txt')
     return ds
 
 
