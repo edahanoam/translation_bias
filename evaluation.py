@@ -1,5 +1,5 @@
 """ Usage:
-    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE [--debug]
+    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE --ds_fn=DSFILETXT [--debug]
 
 """
 from tabnanny import process_tokens
@@ -139,12 +139,17 @@ def predict_gender(word, lang='it'):
     return ", ".join(gender_set)  # Return unique genders
 
 
+def load_ds_from_txt(filename):
+    with open(filename, 'r', encoding='utf-8') as f:
+        ds = [line.strip().split('\t') for line in f]
+    return ds
 
-def for_the_italians(bi_fn,align_fn):
+
+def for_the_italians(bi_fn,align_fn, ds_fn):
     data = pd.read_csv('unambi_data.csv')
 
     #print(type(data))
-
+    load_ds_from_txt(ds_fn)
     ds = create_ds_fn(data,'ds.txt')
     print(ds)
 
@@ -204,7 +209,7 @@ if __name__ == '__main__':
     # out_fn = Path(args["--out"])
 
     bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
-    #ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
+    ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
 
     align_fn = args["--align"] # i am the fast a allign file
     #find_entities()
