@@ -56,6 +56,7 @@ class SpacyPredictor:
                             if gender is not None]
 
         if not observed_genders:
+
             # No observed gendered words - return unknown
             return GENDER.unknown
 

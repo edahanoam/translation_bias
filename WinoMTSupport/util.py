@@ -116,7 +116,6 @@ def get_gender_from_token(token: Token):
     """
     Get gender indication from a spaCy token, if it exists.
     """
-    print(token)
     # Special case handling for French
     if (token.lang_ == "fr") and (token.text == "au") and any(t.tag_.startswith("DET") for t in token.morph):
         return 'Male'  # Using string instead of GENDER enum for simplicity
@@ -127,6 +126,7 @@ def get_gender_from_token(token: Token):
 
     morph_dict = get_morphology_dict(token)
     gender = morph_dict.get('Gender')
+    print(gender)
     if not gender:
         return None
 

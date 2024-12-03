@@ -1,5 +1,5 @@
 """ Usage:
-    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE --ds_fn=DSFILETXT [--debug]
+    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE --ds=DSFILETXT [--debug]
 
 """
 from tabnanny import process_tokens
@@ -72,7 +72,7 @@ def find_all_entities(dataset,english_col,model=None):
 
 
 def find_all_professions(dataset,english_col,model=None):
-    nlp = spacy.load("en_core_web_sm")
+    nlp = spacy.load("en_core_web_lg")
     if not model:
         dataset = dataset.map(
             lambda row: {"entity": find_entities_spacy(row[english_col],nlp)},
@@ -173,7 +173,6 @@ def for_the_italians(bi_fn,align_fn, ds_fn):
     # print(tgt_inds)
 
 
-    target_sentences = [tgt_sent for (ind, (src_sent, tgt_sent)) in bitext]
 
 
 
@@ -200,24 +199,52 @@ def for_the_italians(bi_fn,align_fn, ds_fn):
     #output_predictions(target_sentences, gender_predictions, out_fn)
 
 
+def for_wionMT():
+    pass
+
 
 
 if __name__ == '__main__':
     # Parse command line arguments
     args = docopt(__doc__)
-    # in_file = args["--in"]
-    # out_fn = Path(args["--out"])
 
     bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
     ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
 
     align_fn = args["--align"] # i am the fast a allign file
-    #find_entities()
-    #data = load_data(True)
-    #data=find_all_entities(data,english_col="segment")
-    #print(data['entity'])
+    ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
+    print(ds)
 
-    # data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
-    # filtered_dataset = data.filter(lambda row: None not in row.values())
+    #for_the_italians(bi_fn,align_fn,ds_fn)
+    full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
+    bitext = align_bitext_to_ds(full_bitext, ds)
 
-    for_the_italians(bi_fn,align_fn)
+    translated_profs, tgt_inds, alignment_pairs = get_translated_professions(align_fn, ds, bitext)
+    # Output the alignment pairs
+    for pair in alignment_pairs:
+        print(pair)
+    #print(translated_profs)
+    #print(tgt_inds)
+
+    words = ['commesso','progettista','governante','pulizie','segretario','il']
+    for word in words:
+        print(f"the gender of {word} is {predict_gender(word)}")
+
+
+    assert(len(translated_profs) == len(tgt_inds))
+
+    gender_predictor = LANGAUGE_PREDICTOR['it']()
+
+    target_sentences = [tgt_sent for (ind, (src_sent, tgt_sent)) in bitext]
+
+
+    gender_predictions = [predict_gender(prof)
+                          for prof, translated_sent, entity_index, ds_entry
+                          in tqdm(zip(translated_profs,
+                                      target_sentences,
+                                      map(lambda ls:min(ls, default = -1), tgt_inds),
+                                      ds))]
+
+
+    print(gender_predictions)
+
