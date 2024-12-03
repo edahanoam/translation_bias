@@ -14,9 +14,11 @@ import pandas as pd
 from WinoMTSupport.spacy_support import SpacyPredictor
 from WinoMTSupport.gendered_article import GenderedArticlePredictor, \
     get_german_determiners, GERMAN_EXCEPTION, get_french_determiners
-from WinoMTSupport.load_alignments import align_bitext_to_ds, get_translated_professions
+from WinoMTSupport.load_alignments import align_bitext_to_ds, get_translated_professions, output_predictions
+from WinoMTSupport.evaluate import evaluate_bias
 from tqdm import tqdm
 
+from itertools import islice
 
 
 #login()
@@ -250,6 +252,21 @@ if __name__ == '__main__':
                                       map(lambda ls:min(ls, default = -1), tgt_inds),
                                       ds))]
 
+    # gender_predictions = [
+    #     predict_gender(prof)
+    #     for prof, translated_sent, entity_index, ds_entry
+    #     in tqdm(islice(zip(translated_profs,
+    #                        target_sentences,
+    #                        map(lambda ls: min(ls, default=-1), tgt_inds),
+    #                        ds), 5))
+    # ]
 
-    print(gender_predictions)
+    # Output predictions
+    #output_predictions(target_sentences, gender_predictions, f'testDec0312{lang}pro.txt')
+
+    #d = evaluate_bias(ds, gender_predictions)
+
+
+
+
 
