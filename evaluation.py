@@ -1,5 +1,5 @@
 """ Usage:
-    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE --ds=DSFILETXT [--debug]
+    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE --ds=DSFILETXT --lang=LANG_CODE [--debug]
 
 """
 from tabnanny import process_tokens
@@ -119,6 +119,8 @@ def create_ds_fn(data, out_ds):
 def predict_gender(word, lang='it'):
     #todo: some of the words like dottoressa and cuoca (female noun) get tagged as verb thus wre cant get their gender!
     nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
+    #nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
+
     doc = nlp(word)
     gender_set = set()  # Use a set to store unique genders
 
@@ -213,6 +215,8 @@ if __name__ == '__main__':
 
     align_fn = args["--align"] # i am the fast a allign file
     ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
+    lang = args["--lang"] # code for language
+
     print(ds)
 
     #for_the_italians(bi_fn,align_fn,ds_fn)
@@ -226,14 +230,15 @@ if __name__ == '__main__':
     #print(translated_profs)
     #print(tgt_inds)
 
-    words = ['commesso','progettista','governante','pulizie','segretario','il']
-    for word in words:
-        print(f"the gender of {word} is {predict_gender(word)}")
+    # sanity check
+    # words = ['commesso','progettista','governante','pulizie','segretario','il']
+    # for word in words:
+    #     print(f"the gender of {word} is {predict_gender(word)}")
 
 
     assert(len(translated_profs) == len(tgt_inds))
 
-    gender_predictor = LANGAUGE_PREDICTOR['it']()
+    #gender_predictor = LANGAUGE_PREDICTOR[lang]()
 
     target_sentences = [tgt_sent for (ind, (src_sent, tgt_sent)) in bitext]
 
