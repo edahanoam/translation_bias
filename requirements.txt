@@ -8,3 +8,5 @@ pandas
 pymorphy2
 tqdm
 #fast-alignment
+tokenizers>=0.11.1,<0.14,!=0.11.3
+

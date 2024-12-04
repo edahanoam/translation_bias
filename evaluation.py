@@ -24,8 +24,8 @@ from collections import Counter
 
 #login()
 
-from transformers import AutoTokenizer, AutoModelForTokenClassification
-from transformers import pipeline
+# from transformers import AutoTokenizer, AutoModelForTokenClassification
+# from transformers import pipeline
 
 LANGAUGE_PREDICTOR = {
     "es": lambda: SpacyPredictor("es"),
@@ -147,8 +147,13 @@ def create_ds_fn(data, out_ds):
 
 def predict_gender(word, lang='it'):
     #todo: some of the words like dottoressa and cuoca (female noun) get tagged as verb thus wre cant get their gender!
-    nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
     #nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
+    #nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
+    # if lang=='es':
+    #     nlp = spacy.load("es_dep_news_trf")
+    # else:
+    #     nlp = spacy.load(f"{lang}_core_news_lg", disable = ["parser", "ner"])  # Load the model for the specified language
+    nlp = spacy.load(f"{lang}_core_news_lg", disable=["parser", "ner"])  # Load the model for the specified language
 
     doc = nlp(word)
     gender_set = set()  # Use a set to store unique genders
@@ -252,6 +257,7 @@ if __name__ == '__main__':
     ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
     lang = args["--lang"] # code for language
 
+    print(f"anti for {lang} Dec 4")
     #for_the_italians(bi_fn,align_fn,ds_fn)
     full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
     bitext = align_bitext_to_ds(full_bitext, ds)
