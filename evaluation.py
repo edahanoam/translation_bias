@@ -156,6 +156,9 @@ def predict_gender(word, lang='it'):
     observed_genders = []
     for token in doc:
         #print(f"Token: {token.text}, POS: {token.pos_}, Tags: {token.tag_}, Morph: {token.morph}")
+        # Special case handling for Italian
+        if (lang == "it") and (token.text.startswith("dell'")):
+            observed_genders.append('Masc')
 
         # Extract gender, ensure it's not a list
         gender_info = token.morph.get("Gender")
