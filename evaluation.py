@@ -17,8 +17,9 @@ from WinoMTSupport.gendered_article import GenderedArticlePredictor, \
 from WinoMTSupport.load_alignments import align_bitext_to_ds, get_translated_professions, output_predictions
 from WinoMTSupport.evaluate import evaluate_bias
 from tqdm import tqdm
-
+from WinoMTSupport.util import GENDER, SPACY_GENDER_TYPES
 from itertools import islice
+from collections import Counter
 
 
 #login()
@@ -118,6 +119,32 @@ def create_ds_fn(data, out_ds):
     return ds
 
 
+# def predict_gender(word, lang='it'):
+#     #todo: some of the words like dottoressa and cuoca (female noun) get tagged as verb thus wre cant get their gender!
+#     nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
+#     #nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
+#
+#     doc = nlp(word)
+#     gender_set = set()  # Use a set to store unique genders
+#
+#     for token in doc:
+#         #print(f"Token: {token.text}, POS: {token.pos_}, Tags: {token.tag_}, Morph: {token.morph}")
+#
+#         # Extract gender, ensure it's not a list
+#         gender_info = token.morph.get("Gender")
+#         print(gender_info)
+#         if isinstance(gender_info, list):
+#             # If gender_info is a list, extend the set with all items
+#             gender_set.update(gender_info)
+#         elif gender_info:
+#             # If it's a single item, add it to the set
+#             gender_set.add(gender_info)
+#
+#     if not gender_set:
+#         return "Gender not found or not applicable"
+#     return ", ".join(gender_set)  # Return unique genders
+
+
 def predict_gender(word, lang='it'):
     #todo: some of the words like dottoressa and cuoca (female noun) get tagged as verb thus wre cant get their gender!
     nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
@@ -125,22 +152,28 @@ def predict_gender(word, lang='it'):
 
     doc = nlp(word)
     gender_set = set()  # Use a set to store unique genders
-
+    print("one")
+    observed_genders = []
     for token in doc:
-        print(f"Token: {token.text}, POS: {token.pos_}, Tags: {token.tag_}, Morph: {token.morph}")
+        #print(f"Token: {token.text}, POS: {token.pos_}, Tags: {token.tag_}, Morph: {token.morph}")
 
         # Extract gender, ensure it's not a list
         gender_info = token.morph.get("Gender")
-        if isinstance(gender_info, list):
-            # If gender_info is a list, extend the set with all items
-            gender_set.update(gender_info)
-        elif gender_info:
-            # If it's a single item, add it to the set
-            gender_set.add(gender_info)
+        print(gender_info)
+        if gender_info:
+            observed_genders.append(gender_info[0])
 
-    if not gender_set:
-        return "Gender not found or not applicable"
-    return ", ".join(gender_set)  # Return unique genders
+    if not observed_genders:
+        # No observed gendered words - return unknown
+        return GENDER.unknown
+
+        # Return the most commonly observed gender
+    return SPACY_GENDER_TYPES.get(Counter(observed_genders).most_common(1)[0][0],0)
+
+
+
+
+
 
 
 def load_ds_from_txt(filename):
@@ -240,12 +273,14 @@ if __name__ == '__main__':
     target_sentences = [tgt_sent for (ind, (src_sent, tgt_sent)) in bitext]
 
 
-    gender_predictions = [predict_gender(prof)
+    gender_predictions = [predict_gender(prof,lang)
                           for prof, translated_sent, entity_index, ds_entry
                           in tqdm(zip(translated_profs,
                                       target_sentences,
                                       map(lambda ls:min(ls, default = -1), tgt_inds),
                                       ds))]
+
+    print(gender_predictions)
 
     # gender_predictions = [
     #     predict_gender(prof)
@@ -257,9 +292,9 @@ if __name__ == '__main__':
     # ]
 
     # Output predictions
-    output_predictions(target_sentences, gender_predictions, f'testDec0312{lang}pro.txt')
+    #output_predictions(target_sentences, gender_predictions, f'testDec0312{lang}pro.txt')
 
-    #d = evaluate_bias(ds, gender_predictions)
+    d = evaluate_bias(ds, gender_predictions)
 
 
 

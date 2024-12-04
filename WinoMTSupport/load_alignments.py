@@ -188,7 +188,8 @@ def output_predictions(target_sentences, gender_predictions, out_fn):
         writer = csv.writer(fout, delimiter=",")
         writer.writerow(["Sentence", "Predicted gender"])
         for sent, gender in zip(target_sentences, gender_predictions):
-            writer.writerow([sent, str(gender).split(".")[1]])
+            #writer.writerow([sent, str(gender).split(".")[1]])
+            writer.writerow([sent, str(gender)])
 
 def align_bitext_to_ds(bitext, ds):
     """

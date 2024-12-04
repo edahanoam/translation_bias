@@ -34,7 +34,8 @@ class GENDER(Enum):
 SPACY_GENDER_TYPES = {
     "Masc": GENDER.male,
     "Fem": GENDER.female,
-    "Neut": GENDER.neutral # seen in Dutch spacy
+    "Neut": GENDER.neutral, # seen in Dutch spacy
+    "Gender not found or not applicable": GENDER.unknown
 }
 
 # Winobias gender type conversion
