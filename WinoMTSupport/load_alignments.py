@@ -204,6 +204,7 @@ def align_bitext_to_ds(bitext, ds):
         new_bitext.append((ind, (en_sent, tgt_sent)))
     return new_bitext
 
+
 if __name__ == "__main__":
     # Parse command line arguments
     args = docopt(__doc__)
@@ -241,7 +242,6 @@ if __name__ == "__main__":
     # Output predictions
     output_predictions(target_sentences, gender_predictions, out_fn)
 
-    d = evaluate_bias(ds, gender_predictions)
+    #d = evaluate_bias(ds, gender_predictions)
 
 
-    logging.info("DONE")

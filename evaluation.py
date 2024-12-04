@@ -203,9 +203,6 @@ def for_the_italians(bi_fn,align_fn, ds_fn):
     #output_predictions(target_sentences, gender_predictions, out_fn)
 
 
-def for_wionMT():
-    pass
-
 
 
 if __name__ == '__main__':
@@ -260,7 +257,7 @@ if __name__ == '__main__':
     # ]
 
     # Output predictions
-    #output_predictions(target_sentences, gender_predictions, f'testDec0312{lang}pro.txt')
+    output_predictions(target_sentences, gender_predictions, f'testDec0312{lang}pro.txt')
 
     #d = evaluate_bias(ds, gender_predictions)
 
