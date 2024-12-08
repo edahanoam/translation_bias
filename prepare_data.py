@@ -81,6 +81,8 @@ def create_ds_fn(data,out_fn='dsDec8.txt'):
     selected_columns = ['gender', 'profession_index','segment', 'profession']
     reordered_df = data[selected_columns]
 
+    reordered_df['gender'] = reordered_df['gender'].replace({'F': 'female', 'M': 'male'})
+
     # Convert the reordered DataFrame to a list of lists
     ds = reordered_df.values.tolist()
 
@@ -90,7 +92,7 @@ def create_ds_fn(data,out_fn='dsDec8.txt'):
                 f.write('\t'.join(map(str, row)) + '\n')
 
     # Save ds
-    save_ds_as_txt(ds, 'dsDec8.txt')
+    save_ds_as_txt(ds, out_fn)
     return ds
 
 

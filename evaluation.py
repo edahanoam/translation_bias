@@ -306,7 +306,7 @@ if __name__ == '__main__':
 
     d = evaluate_bias(ds, gender_predictions)
 
-    with open(output_file, "w", encoding="utf-8") as file:
+    with open(out_fn, "w", encoding="utf-8") as file:
         file.write(d)
 
 
