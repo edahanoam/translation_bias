@@ -1,5 +1,5 @@
 """ Usage:
-    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE --ds=DSFILETXT --lang=LANG_CODE [--debug]
+    <file-name> --bi=SEGMENTS_TRANSLATION --align=ALIGN_FILE --ds=DSFILETXT --lang=LANG_CODE --out_fn=RESULTS_FILENAME [--debug]
 
 """
 from tabnanny import process_tokens
@@ -256,6 +256,7 @@ if __name__ == '__main__':
     align_fn = args["--align"] # i am the fast a allign file
     ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
     lang = args["--lang"] # code for language
+    out_fn = args["--out_fn"] # code for language
 
     print(f"anti for {lang} Dec 5 Italian addition")
     #for_the_italians(bi_fn,align_fn,ds_fn)
@@ -305,6 +306,8 @@ if __name__ == '__main__':
 
     d = evaluate_bias(ds, gender_predictions)
 
+    with open(output_file, "w", encoding="utf-8") as file:
+        file.write(d)
 
 
 

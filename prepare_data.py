@@ -20,11 +20,19 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
 
         return {"formatted_text": f"{row[original_text_column]} ||| {row[translation_column]}"}
 
-    formatted_lines = dataset.map(format_row, remove_columns=dataset.column_names)
 
-    # Write to file in one go
-    with open(out_fn, "w", encoding="utf-8") as f:
-        f.write("\n".join(formatted_lines["formatted_text"]))
+    if type(dataset)==pd.DataFrame:
+        dataset['formatted_text'] = dataset.apply(format_row, axis=1)
+        formatted_lines = [entry['formatted_text'] for entry in dataset['formatted_text']]
+        with open(out_fn, "w", encoding="utf-8") as f:
+            f.write("\n".join(formatted_lines))
+
+    else:
+        formatted_lines = dataset.map(format_row, remove_columns=dataset.column_names)
+
+        # Write to file in one go
+        with open(out_fn, "w", encoding="utf-8") as f:
+            f.write("\n".join(formatted_lines["formatted_text"]))
 
 
 def using_italiandata():
