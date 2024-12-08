@@ -38,13 +38,37 @@ def using_italiandata():
     # Save the DataFrame to a CSV file
     df.to_csv('unambi_dataDec8.csv', index=False)
 
-    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_Dec8.txt')
+    #transform_to_fast_align(filtered_dataset, 'segment', 'suggestion', 'fast_align_Dec8.txt')
+
+    # Splitting the DataFrame based on the 'gender' column
+    df_male = df[df['gender'] == 'M']
+    df_female = df[df['gender'] == 'F']
+
+    create_ds_fn(df_male, "male_ds_italian_data.txt")
+    create_ds_fn(df_female, "female_ds_italian_data.txt")
+
+    transform_to_fast_align(df_male, 'segment', 'suggestion', 'male_bi_italian_data.txt')
+    transform_to_fast_align(df_female, 'segment', 'suggestion', 'female_bi_italian_data.txt')
+
+    ### and then needed for the after human manipulation:
+    transform_to_fast_align(df_male, 'segment', 'last_translation', 'after_male_bi_italian_data.txt')
+    transform_to_fast_align(df_female, 'segment', 'last_translation', 'after_female_bi_italian_data.txt')
+
+    # and now all the process for pro-anti stero
+    pro = df[df['stereotype'] == 1]
+    anti = df[df['stereotype'] == -1]
+    create_ds_fn(pro, "pro_ds_italian_data.txt")
+    create_ds_fn(anti, "anti_ds_italian_data.txt")
+
+    transform_to_fast_align(pro, 'segment', 'suggestion', 'pro_bi_italian_data.txt')
+    transform_to_fast_align(anti, 'segment', 'suggestion', 'anti_bi_italian_data.txt')
+
+    ### and then needed for the after human manipulation:
+    transform_to_fast_align(pro, 'segment', 'last_translation', 'after_pro_bi_italian_data.txt')
+    transform_to_fast_align(anti, 'segment', 'last_translation', 'after_anti_bi_italian_data.txt')
 
 
-
-    create_ds_fn(df)
-
-def create_ds_fn(data):
+def create_ds_fn(data,out_fn='dsDec8.txt'):
     #df = data.to_pandas()
     selected_columns = ['gender', 'profession_index','segment', 'profession']
     reordered_df = data[selected_columns]
