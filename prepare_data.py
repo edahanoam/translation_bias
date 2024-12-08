@@ -36,9 +36,12 @@ def using_italiandata():
     df = filtered_dataset.to_pandas()
 
     # Save the DataFrame to a CSV file
-    df.to_csv('unambi_dataDec3.csv', index=False)
+    df.to_csv('unambi_dataDec8.csv', index=False)
 
-    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_nonumsDec3.txt')
+    transform_to_fast_align(filtered_dataset, 'segment', 'tgt', 'fast_align_Dec8.txt')
+
+
+
     create_ds_fn(df)
 
 def create_ds_fn(data):
@@ -55,7 +58,7 @@ def create_ds_fn(data):
                 f.write('\t'.join(map(str, row)) + '\n')
 
     # Save ds
-    save_ds_as_txt(ds, 'dsDEc3.txt')
+    save_ds_as_txt(ds, 'dsDec8.txt')
     return ds
 
 
