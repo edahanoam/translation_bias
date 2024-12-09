@@ -82,7 +82,7 @@ def create_ds_fn(data, oringal_text='segment',profession_index = 'profession_ind
     selected_columns = [gender_col, profession_index,oringal_text, 'profession']
     reordered_df = data[selected_columns]
 
-    reordered_df['gender'] = reordered_df['gender'].replace({'F': 'female', 'M': 'male'})
+    reordered_df[gender_col] = reordered_df[gender_col].replace({'F': 'female', 'M': 'male'})
 
     # Convert the reordered DataFrame to a list of lists
     ds = reordered_df.values.tolist()

@@ -1,5 +1,5 @@
 """ Usage:
-    <file-name> --lang=LANG_CODE --model=MODEL --n=BATCH_SIZE [--debug]
+    <file-name> --lang=LANG_CODE --model=MODEL --n=BATCH_SIZE  [--debug]
 """
 from docopt import docopt
 
@@ -12,12 +12,15 @@ from prepare_data import create_ds_fn, transform_to_fast_align
 MODEL_INPUT_FORMAT = ("translate English to {}: {}")
 BUG_original_sentence='sentence_text'
 
-languages_dic= {'fr':'French','de':'German'}
+languages_dic= {'fr':'French','de':'German','es':'Spanish','he':'Hebrew'}
 models_dic= {'tb':'google-t5/t5-base','nl':'facebook/nllb-200-distilled-1.3B'}
 
 
 def load_data():
-    data=pd.read_csv('gold_BUG.csv',nrows=50)
+    #todo: remove nrows
+    #data=pd.read_csv('gold_BUG.csv',nrows=50)
+    data=pd.read_csv('gold_BUG.csv')
+
     return data
 
 
@@ -58,13 +61,22 @@ def inference_one_model(df,model,batch_size):
 
 
 
-def translation_with_pipeline(df,model,batch_size):
+def translation_with_pipeline(df,model,batch_size,lang):
 
-    translator = pipeline("translation", model=model,device=0 )
+    translator = pipeline("translation", model=model,device=0,src_lang='en', tgt_lang=lang)
     results = []
     for i in range(0, len(df), batch_size):
         # Get a batch of inputs
-        batch_inputs = df['inputs'].iloc[i:i + batch_size].tolist()
+        batch_inputs = df['sentence_text'].iloc[i:i + batch_size].tolist()
+
+        # Add the target language code to each sentence
+        formatted_batch = [f">>{lang}<< {sentence}" for sentence in batch_inputs]
+
+        # Translate the batch
+        translations = translator(formatted_batch)
+
+        # Extract the translation text
+        results.extend([translation['translation_text'] for translation in translations])
 
         # Use the pipeline to process the batch
         batch_outputs = translator(batch_inputs)
@@ -91,7 +103,6 @@ if __name__ == '__main__':
     # model = args["--model"]
     lang = args["--lang"] # code for language
     model_name = args["--model"]
-
     batch_size = int(args["--n"])
 
     # out_bi = args["--bi"] #i am a text file containig the formatted to dast allign text
@@ -104,9 +115,9 @@ if __name__ == '__main__':
 
     model = models_dic[model_name]
 
-    if model == 'tb':
+    if model_name == 'tb':
         df = inference_one_model(data,model,batch_size)
     else:
-        df = translation_with_pipeline(data,model,batch_size)
+        df = translation_with_pipeline(data,model,batch_size,lang)
 
     transform_to_fit_eval(df,f"ds_BUG.txt",f"to_align_{lang}_{model_name}")
