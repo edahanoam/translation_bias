@@ -18,8 +18,8 @@ models_dic= {'tb':'google-t5/t5-base','nl':'facebook/nllb-200-distilled-1.3B'}
 
 def load_data():
     #todo: remove nrows
-    #data=pd.read_csv('gold_BUG.csv',nrows=50)
-    data=pd.read_csv('gold_BUG.csv')
+    data=pd.read_csv('gold_BUG.csv',nrows=50)
+    #data=pd.read_csv('gold_BUG.csv')
 
     return data
 

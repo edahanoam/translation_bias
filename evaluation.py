@@ -260,8 +260,9 @@ if __name__ == '__main__':
     # for word in words:
     #     print(f"the gender of {word} is {predict_gender(word)}")
 
-
+    print("hereeeeeeerererererere")
     assert(len(translated_profs) == len(tgt_inds))
+    print("nopedipop")
 
     #gender_predictor = LANGAUGE_PREDICTOR[lang]()
 
