@@ -76,9 +76,10 @@ def using_italiandata():
     transform_to_fast_align(anti, 'segment', 'last_translation', 'after_anti_bi_italian_data.txt')
 
 
-def create_ds_fn(data,out_fn='dsDec8.txt'):
+def create_ds_fn(data, oringal_text='segment',profession_index = 'profession_index', gender_col = 'gender',out_fn='dsDec8.txt'):
     #df = data.to_pandas()
-    selected_columns = ['gender', 'profession_index','segment', 'profession']
+
+    selected_columns = [gender_col, profession_index,oringal_text, 'profession']
     reordered_df = data[selected_columns]
 
     reordered_df['gender'] = reordered_df['gender'].replace({'F': 'female', 'M': 'male'})

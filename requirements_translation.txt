@@ -2,3 +2,5 @@ transformers
 SentencePiece
 Torch
 pandas
+docopt
+datasets
