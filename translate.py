@@ -2,12 +2,19 @@ from docopt import docopt
 
 
 from transformers import T5Tokenizer, T5ForConditionalGeneration
-
+import pandas as pd
 
 def load_data():
+    data=pd.read_csv('gold_BUG.csv')
+    return data
 
 
-def inference_one_model():
+def transform_to_model_input(data):
+    pass
+
+
+
+def inference_one_model(data, model,lang,batch_size):
     print("yo")
     tokenizer = T5Tokenizer.from_pretrained('t5-base')
 
@@ -25,11 +32,20 @@ def inference_one_model():
     print(decoded)
 
 
-def transform_to_fit_eval():
+def transform_to_fit_eval(data,):
     pass
 
 
 
 
 if __name__ == '__main__':
-    pass
+    args = docopt(__doc__)
+    model = args["--model"]
+    lang = args["--lang"] # code for language
+    batch_size = args["--n"]
+    out_bi = args["--bi"] #i am a text file containig the formatted to dast allign text
+    out_ds = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
+    align_fn = args["--align"] # i am the fast a allign file
+
+
+    data = load_data()
