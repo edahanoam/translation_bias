@@ -24,21 +24,6 @@ from collections import Counter
 
 #login()
 
-# from transformers import AutoTokenizer, AutoModelForTokenClassification
-# from transformers import pipeline
-
-LANGAUGE_PREDICTOR = {
-    "es": lambda: SpacyPredictor("es"),
-    #"fr": lambda: SpacyPredictor("fr"),
-    "it": lambda: SpacyPredictor("it"),
-    #"ru": lambda: PymorphPredictor("ru"),
-    #"uk": lambda: PymorphPredictor("uk"),
-    #"he": lambda: HebrewPredictor(),
-    #"ar": lambda: ArabicPredictor(),
-    "de": lambda: GenderedArticlePredictor("de", get_german_determiners, GERMAN_EXCEPTION),
-    #"cs": lambda: CzechPredictor(),
-    #"pl": lambda: MorfeuszPredictor(),
-}
 
 
 def load_data(ambi=False):

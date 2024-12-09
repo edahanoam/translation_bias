@@ -1,8 +1,13 @@
+from docopt import docopt
+
+
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 
+def load_data():
 
-if __name__ == '__main__':
+
+def inference_one_model():
     print("yo")
     tokenizer = T5Tokenizer.from_pretrained('t5-base')
 
@@ -19,3 +24,12 @@ if __name__ == '__main__':
 
     print(decoded)
 
+
+def transform_to_fit_eval():
+    pass
+
+
+
+
+if __name__ == '__main__':
+    pass
