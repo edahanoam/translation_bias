@@ -18,10 +18,10 @@ import csv
 
 # Input and output file paths
 input_file = 'gold_BUG.csv'
-output_file = 'gold_BUG_balanced_20.txt'
-detailed_output_file ='gold_BUG_balanced_20_tagged_no_bad_words.txt'
+output_file = 'gold_BUG_balanced_80.txt'
+detailed_output_file ='gold_BUG_balanced_80_tagged.txt'
 
-max_per_group = 5
+max_per_group = 20
 
 conditions = {
     ('Male', 1): [],
@@ -32,7 +32,7 @@ conditions = {
 
 
 bad_words = ["person","child","writer"]
-max_per_group = 5
+max_per_group = 20
 
 # Read the CSV and filter rows
 with open(input_file, 'r', encoding='utf-8') as csv_file:
