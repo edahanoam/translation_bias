@@ -1,5 +1,5 @@
 """ Usage:
-    <file-name> --lang=LANG_CODE --model=MODEL --n=BATCH_SIZE  [--debug]
+    <file-name> --lang=LANG_CODE --model=MODEL --n=BATCH_SIZE --out=FILENAME [--debug]
 """
 from docopt import docopt
 
@@ -17,9 +17,8 @@ models_dic= {'tb':'google-t5/t5-base','nl':'facebook/nllb-200-distilled-1.3B'}
 
 
 def load_data():
-    #todo: remove nrows
-    data=pd.read_csv('gold_BUG.csv',nrows=50)
-    #data=pd.read_csv('gold_BUG.csv')
+    #data=pd.read_csv('gold_BUG.csv',nrows=50)
+    data=pd.read_csv('gold_BUG.csv')
 
     return data
 
@@ -104,6 +103,7 @@ if __name__ == '__main__':
     lang = args["--lang"] # code for language
     model_name = args["--model"]
     batch_size = int(args["--n"])
+    out_file = args["--out"]
 
     # out_bi = args["--bi"] #i am a text file containig the formatted to dast allign text
     # out_ds = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
@@ -120,4 +120,6 @@ if __name__ == '__main__':
     else:
         df = translation_with_pipeline(data,model,batch_size,lang)
 
-    transform_to_fit_eval(df,f"ds_BUG.txt",f"to_align_{lang}_{model_name}")
+    df.to_csv('out.csv')
+
+    #transform_to_fit_eval(df,f"ds_BUG.txt",f"to_align_{lang}_{model_name}")
