@@ -174,7 +174,8 @@ if __name__ == '__main__':
     #print("Columns:", data.column_names)
     #filter_profession(load_data(False))
     #calc_all_options()
-    # ds = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
+    # ds =
+    # merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
     # calc_bleu_dif_stereotype(ds)
 
     print(get_proffession_list())
