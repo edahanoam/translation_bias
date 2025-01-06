@@ -16,7 +16,7 @@ def sample():
     remaining_df = df[~df['original_id'].isin(combined_selected['original_id'])]
 
     if remaining_df.shape[0] >= 10:
-        selected_final_rows = remaining_df.sample(10)
+        selected_final_rows = remaining_df[remaining_df_after_take['gender'] == 'M'].sample(10)
     else:
         selected_final_rows = remaining_df  # If less than 10, take all available
 
