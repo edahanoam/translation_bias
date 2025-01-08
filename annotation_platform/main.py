@@ -41,11 +41,8 @@ def init():
 
 
     if 'cur_page' not in st.session_state:
-        #st.session_state.cur_page = 'before'
-        #st.session_state.cur_page = 'instructions'
         st.session_state.cur_page = 'sign_in'
         st.session_state.start_time = time.time()
-        # st.session_state.samples_csv = load()
 
 
 
@@ -59,8 +56,6 @@ def load_page():
     elif st.session_state.cur_page == 'training':
         experiment()
     elif st.session_state.cur_page == 'after':
-        #after()
-        #after_with_all_survey()
         demographics()
     elif st.session_state.cur_page == 'finish':
         with st.columns([1, 2, 1])[1]:
