@@ -77,7 +77,7 @@ def calc_all_options():
 
 
 def get_proffession_list():
-    df= pd.read_csv("gold_BUG.csv")
+    df= pd.read_csv("Data/gold_BUG.csv")
     # num_profs= len(df.profession.unique())
     # df= pd.read_csv("full_BUG.csv")
     #

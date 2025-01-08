@@ -17,7 +17,7 @@ import csv
 #                 txt_file.write(row['sentence_text'] + '\n')
 
 # Input and output file paths
-input_file = 'gold_BUG.csv'
+input_file = 'Data/gold_BUG.csv'
 output_file = 'gold_BUG_balanced_100.txt'
 detailed_output_file ='gold_BUG_balanced_100_tagged.txt'
 

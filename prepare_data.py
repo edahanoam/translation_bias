@@ -38,7 +38,7 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
 def using_italiandata():
     #curently - un-ambig
 
-    data = merge_sterio_anti(pd.read_csv("gold_BUG.csv"),filter_profession(load_data(False)),get_proffession_list())
+    data = merge_sterio_anti(pd.read_csv("Data/gold_BUG.csv"), filter_profession(load_data(False)), get_proffession_list())
 
     filtered_dataset = data.filter(lambda row: None not in row.values())
     df = filtered_dataset.to_pandas()

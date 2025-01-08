@@ -9,7 +9,6 @@ import pandas as pd
 model_dics = {'op':"Helsinki-NLP/opus-mt-en-he"}
 
 def load_data():
-    # todo: if working with bug return to this:
     #data=pd.read_csv('/cs/snapless/gabis/noam.dahan1/data_BUG/balanced_BUG.csv')
     #data = data.sample(frac=1)
     data = pd.read_csv("unambi_dataDec8.csv")
@@ -25,7 +24,6 @@ def translate_with_pipeline(model_name, df, batch_size):
     # Process the DataFrame in batches
     for i in range(0, len(df), batch_size):
         # Extract a batch of sentences
-        #todo: if working with bug return to this:
         #batch = df['sentence_text'].iloc[i:i + batch_size].tolist()
         batch = df['segment'].iloc[i:i + batch_size].tolist()
 
