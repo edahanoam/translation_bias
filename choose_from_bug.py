@@ -1,22 +1,6 @@
 import csv
 #
-# # Input and output file paths
-# input_file = 'gold_BUG.csv'
-# output_file = 'gold_BUG_other_10.txt'
-#
-# # Specify the row range
-# start_row = 11
-# end_row = 21
-#
-# # Read the CSV and write the specified range of rows
-# with open(input_file, 'r', encoding='utf-8') as csv_file:
-#     reader = csv.DictReader(csv_file)  # Read as a dictionary to access columns by name
-#     with open(output_file, 'w', encoding='utf-8') as txt_file:
-#         for i, row in enumerate(reader, start=1):  # Enumerate rows, starting at 1
-#             if start_row <= i < end_row:  # Write rows within the specified range
-#                 txt_file.write(row['sentence_text'] + '\n')
 
-# Input and output file paths
 input_file = 'Data/gold_BUG.csv'
 output_file = 'gold_BUG_balanced_100.txt'
 detailed_output_file ='gold_BUG_balanced_100_tagged.txt'
@@ -50,13 +34,11 @@ with open(input_file, 'r', encoding='utf-8') as csv_file:
                 conditions[key].append((row['sentence_text'], predicted_gender, stereotype))
 
 
-# Write the selected rows to the output file (simple text format)
 with open(output_file, 'w', encoding='utf-8') as txt_file:
     for group, rows in conditions.items():
         for sentence, _, _ in rows:
             txt_file.write(sentence + '\n')
 
-# Write the detailed output file (includes predicted_gender and stereotype)
 with open(detailed_output_file, 'w', encoding='utf-8') as detailed_txt_file:
     for group, rows in conditions.items():
         for sentence, gender, stereotype in rows:

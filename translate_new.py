@@ -11,7 +11,7 @@ model_dics = {'op':"Helsinki-NLP/opus-mt-en-he"}
 def load_data():
     #data=pd.read_csv('/cs/snapless/gabis/noam.dahan1/data_BUG/balanced_BUG.csv')
     #data = data.sample(frac=1)
-    data = pd.read_csv("unambi_dataDec8.csv")
+    data = pd.read_csv("Data/unambi_dataDec8.csv")
     return data.head(300)
 
 

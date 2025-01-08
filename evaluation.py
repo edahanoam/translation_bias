@@ -86,7 +86,6 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
 
 
 def create_ds_fn(data, out_ds):
-    #df = data.to_pandas()
     selected_columns = ['gender', 'profession_index','segment', 'profession']
     reordered_df = data[selected_columns]
 
@@ -104,40 +103,8 @@ def create_ds_fn(data, out_ds):
     return ds
 
 
-# def predict_gender(word, lang='it'):
-#     #todo: some of the words like dottoressa and cuoca (female noun) get tagged as verb thus wre cant get their gender!
-#     nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
-#     #nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
-#
-#     doc = nlp(word)
-#     gender_set = set()  # Use a set to store unique genders
-#
-#     for token in doc:
-#         #print(f"Token: {token.text}, POS: {token.pos_}, Tags: {token.tag_}, Morph: {token.morph}")
-#
-#         # Extract gender, ensure it's not a list
-#         gender_info = token.morph.get("Gender")
-#         print(gender_info)
-#         if isinstance(gender_info, list):
-#             # If gender_info is a list, extend the set with all items
-#             gender_set.update(gender_info)
-#         elif gender_info:
-#             # If it's a single item, add it to the set
-#             gender_set.add(gender_info)
-#
-#     if not gender_set:
-#         return "Gender not found or not applicable"
-#     return ", ".join(gender_set)  # Return unique genders
-
 
 def predict_gender(word, lang='it'):
-    #todo: some of the words like dottoressa and cuoca (female noun) get tagged as verb thus wre cant get their gender!
-    #nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
-    #nlp = spacy.load(f"{lang}_core_news_lg")  # Load the model for the specified language
-    # if lang=='es':
-    #     nlp = spacy.load("es_dep_news_trf")
-    # else:
-    #     nlp = spacy.load(f"{lang}_core_news_lg", disable = ["parser", "ner"])  # Load the model for the specified language
     nlp = spacy.load(f"{lang}_core_news_lg", disable=["parser", "ner"])  # Load the model for the specified language
 
     doc = nlp(word)
@@ -157,10 +124,8 @@ def predict_gender(word, lang='it'):
                 observed_genders.append(gender_info[0])
 
     if not observed_genders:
-        # No observed gendered words - return unknown
         return GENDER.unknown
 
-        # Return the most commonly observed gender
     return SPACY_GENDER_TYPES.get(Counter(observed_genders).most_common(1)[0][0],0)
 
 
@@ -184,49 +149,19 @@ def for_the_italians(bi_fn,align_fn, ds_fn):
     print(ds)
 
 
-    #ds_fn = create_ds_fn(data)
-    #ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
     full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
     bitext = align_bitext_to_ds(full_bitext, ds)
 
-    #translated_profs, tgt_inds = get_translated_professions(align_fn, ds, bitext)
     translated_profs, tgt_inds, alignment_pairs = get_translated_professions(align_fn, ds, bitext)
 
     # Output the alignment pairs
     for pair in alignment_pairs:
         print(pair)
-    #print(translated_profs)
-    #print(tgt_inds)
 
     assert(len(translated_profs) == len(tgt_inds))
-    # print(translated_profs)
-    # print(tgt_inds)
 
 
 
-
-
-    # words = ['dottoressa','medico','avvocata','pittore','fotografo','cuoca','cuoco']
-    # for word in words:
-    #     print(f"the gender of {word} is {predict_gender(word)}")
-    #
-
-
-    # gender_predictor = LANGAUGE_PREDICTOR['it']()
-    #
-    #
-    # gender_predictions = [gender_predictor.get_gender(prof, translated_sent, entity_index, ds_entry)
-    #                       for prof, translated_sent, entity_index, ds_entry
-    #                       in tqdm(zip(translated_profs,
-    #                                   target_sentences,
-    #                                   map(lambda ls:min(ls, default = -1), tgt_inds),
-    #                                   ds))]
-    #
-    #
-    # print(gender_predictions)
-
-    # Output predictions
-    #output_predictions(target_sentences, gender_predictions, out_fn)
 
 
 
@@ -244,7 +179,6 @@ if __name__ == '__main__':
     out_fn = args["--out_fn"] # code for language
 
     print(f"anti for {lang} Dec 5 Italian addition")
-    #for_the_italians(bi_fn,align_fn,ds_fn)
     full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
     bitext = align_bitext_to_ds(full_bitext, ds)
 
@@ -252,17 +186,8 @@ if __name__ == '__main__':
     # Output the alignment pairs
     for pair in alignment_pairs:
         print(pair)
-    #print(translated_profs)
-    #print(tgt_inds)
 
-    # sanity check
-    # words = ['commesso','progettista','governante','pulizie','segretario','il']
-    # for word in words:
-    #     print(f"the gender of {word} is {predict_gender(word)}")
-
-    print("hereeeeeeerererererere")
     assert(len(translated_profs) == len(tgt_inds))
-    print("nopedipop")
 
     #gender_predictor = LANGAUGE_PREDICTOR[lang]()
 
@@ -278,17 +203,6 @@ if __name__ == '__main__':
 
     print(gender_predictions)
 
-    # gender_predictions = [
-    #     predict_gender(prof)
-    #     for prof, translated_sent, entity_index, ds_entry
-    #     in tqdm(islice(zip(translated_profs,
-    #                        target_sentences,
-    #                        map(lambda ls: min(ls, default=-1), tgt_inds),
-    #                        ds), 5))
-    # ]
-
-    # Output predictions
-    #output_predictions(target_sentences, gender_predictions, f'testDec0312{lang}pro.txt')
 
     d = evaluate_bias(ds, gender_predictions)
 
