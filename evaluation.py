@@ -170,13 +170,13 @@ if __name__ == '__main__':
     # Parse command line arguments
     args = docopt(__doc__)
 
-    bi_fn = args["--bi"] #i am a text file containig the formatted to dast allign text
-    ds_fn = args["--ds"] # i think i am a file oin the structure: gender proffession_index sententence proffession
+    bi_fn = args["--bi"]
+    ds_fn = args["--ds"]
 
-    align_fn = args["--align"] # i am the fast a allign file
+    align_fn = args["--align"]
     ds = [line.strip().split("\t") for line in open(ds_fn, encoding = "utf8")]
-    lang = args["--lang"] # code for language
-    out_fn = args["--out_fn"] # code for language
+    lang = args["--lang"]
+    out_fn = args["--out_fn"]
 
     print(f"anti for {lang} Dec 5 Italian addition")
     full_bitext = [line.strip().split(" ||| ") for line in open(bi_fn, encoding = "utf8")]
