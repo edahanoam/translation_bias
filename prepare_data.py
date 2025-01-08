@@ -1,5 +1,5 @@
 from datasets import load_dataset
-from main import get_proffession_list,filter_profession,merge_sterio_anti
+from small_eval_FBK import get_proffession_list,filter_profession,merge_sterio_anti
 import pandas as pd
 import re
 
@@ -35,7 +35,7 @@ def transform_to_fast_align(dataset, original_text_column, translation_column, o
             f.write("\n".join(formatted_lines["formatted_text"]))
 
 
-def using_italiandata():
+def using_FBKdata():
     #curently - un-ambig
 
     data = merge_sterio_anti(pd.read_csv("Data/gold_BUG.csv"), filter_profession(load_data(False)), get_proffession_list())
@@ -98,7 +98,7 @@ def create_ds_fn(data, oringal_text='segment',profession_index = 'profession_ind
 
 
 if __name__ == '__main__':
-    using_italiandata()
+    using_FBKdata()
     # gold_BUG= pd.read_csv("gold_BUG.csv")
     # transform_to_fast_align(gold_BUG,'sentence_text')
 

@@ -9,7 +9,7 @@ from pathlib import Path
 import spacy
 from datasets import load_dataset
 from huggingface_hub import login
-from main import get_proffession_list,filter_profession,merge_sterio_anti
+from small_eval_FBK import get_proffession_list,filter_profession,merge_sterio_anti
 import pandas as pd
 from WinoMTSupport.spacy_support import SpacyPredictor
 from WinoMTSupport.gendered_article import GenderedArticlePredictor, \

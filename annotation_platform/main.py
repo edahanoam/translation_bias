@@ -2,7 +2,7 @@ import streamlit as st
 from after_questionnaire import demographics
 from before_questionnaire import before
 from instructions_and_examples import instructions_page
-from training import training
+#from training import training
 from experiment import experiment
 import gspread
 import pandas as pd
